@@ -1,0 +1,2 @@
+primewayctl create pipeline --config pipeline_config.yaml
+primectl create job --config job_config.yaml

@@ -1,0 +1,19 @@
+primeway_api_token: primeway-testabctoken
+docker_image: nvidia/triton-server:latest
+job_name: high_perf_inference
+job_type: deploy
+cpu_count: 8
+memory: 128
+disk_space: 200
+port: 8000
+idle_timeout: 3600
+health_check_timeout: 300
+gpu_types:
+  - type: NVIDIA A100 80GB PCIe
+    count: 4
+health_endpoint: /v2/health/ready
+env:
+  - name: MAX_BATCH_SIZE
+    value: "128"
+  - name: CUDA_VISIBLE_DEVICES
+    value: "all"

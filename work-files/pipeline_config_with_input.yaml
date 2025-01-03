@@ -1,0 +1,31 @@
+pipeline_name: Sample Pipeline
+schedule: 0 0 * * *
+primeway_api_token: primeway-nlOm2e3vwv_rjakw286mzg
+request_pipeline_input_dir: /custom-data-pipeline-train-step
+steps:
+  - id: step1
+    job_type: run
+    docker_image: python:3.10-slim
+    job_name: train
+    inputs: [request_pipeline_input_dir]
+    project_dir: ./job_train
+    command: python train.py
+    gpu_count: 1
+    memory: 16
+    cpu_count: 1
+    disk_space: 50
+    gpu_types:
+    - type: NVIDIA A40
+      count: 1
+    requirements:
+      - numpy
+      - joblib
+      - scikit-learn
+      - pandas
+    ignore_patterns:
+      - '*.pyc'
+      - __pycache__
+      - venv
+      - build
+      - primeway
+      - '*.egg-info'

@@ -1,0 +1,13 @@
+docker_image: 'runpod/pytorch:2.2.0-py3.10-cuda12.1.1-devel-ubuntu22.04'
+gpu_count: 1
+cpu_count: 4
+memory: 16
+disk_space: 10
+gpu_type: 'NVIDIA RTX A2000'
+ignore_patterns:
+  - '*.pyc'
+  - '__pycache__'
+  - 'venv'
+  - 'build'
+  - 'primeway'
+  - '*.egg-info'

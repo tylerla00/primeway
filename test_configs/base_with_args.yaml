@@ -1,0 +1,19 @@
+primeway_api_token: primeway-testghitoken
+docker_image: python:3.8-slim
+job_name: dev_testing
+job_type: run
+entry_script: test_suite.py
+project_dir: ./tests
+args: "--verbose --log-level debug"
+memory: 8
+disk_space: 20
+cpu_count: 2
+requirements:
+  - pytest
+  - pytest-cov
+  - black
+  - flake8
+ignore_patterns:
+  - '*.pyc'
+  - .coverage
+  - htmlcov/

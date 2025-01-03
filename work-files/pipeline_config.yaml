@@ -1,0 +1,154 @@
+pipeline_name: Sample Pipeline
+schedule: 0 0 * * *
+primeway_api_token: primeway-fR8w8tnrCHQ5cmiqsI3_aA
+request_pipeline_input_dir: /custom-pipeline-data
+schedule:
+  workdays:  # Mon-Fri default schedule
+    - start: "08:00:00"
+      end: "18:00:00"
+    - start: "22:00:00"  # Night window
+      end: "23:59:59"
+  
+  weekends:  # Sat-Sun default schedule
+    - start: "10:00:00"
+      end: "16:00:00"
+    - start: "20:00:00"  # Evening window
+      end: "22:00:00"
+  
+  specific_days:  # Optional overrides for specific days
+    - day: monday
+      windows:
+        - start: "07:00:00"  # Morning window
+          end: "19:00:00"
+        - start: "21:00:00"  # Evening window
+          end: "23:00:00"    
+    - day: wednesday
+      windows:
+        - start: "09:00:00"  # Morning session
+          end: "12:00:00"
+        - start: "14:00:00"  # Afternoon session
+          end: "17:00:00"
+        - start: "20:00:00"  # Night training
+          end: "23:00:00"
+steps:
+  - id: step1
+    job_type: run
+    docker_image: python:3.10-slim
+    job_name: preprocess
+    entry_script: preprocess.py
+    project_dir: ./preprocess
+    memory: 8
+    disk_space: 20
+    cpu_count: 1
+    gpu_types:
+    - type: NVIDIA A40
+      count: 1
+    requirements:
+      - numpy
+      - scikit-learn
+      - joblib
+    ignore_patterns:
+      - '*.pyc'
+      - __pycache__
+      - venv
+      - build
+      - primeway
+      - '*.egg-info'
+    dependencies: []
+
+  - id: step2
+    job_type: run
+    docker_image: python:3.10-slim
+    job_name: train
+    project_dir: ./train
+    command: python train.py
+    artifacts_path: /training_artifacts
+    gpu_count: 1
+    memory: 16
+    cpu_count: 1
+    disk_space: 50
+    gpu_types:
+    - type: NVIDIA A40
+      count: 1
+    inputs: [step1]
+    env:
+    - name: ARTIFACT_DIR_FROM_STEP_1
+      value: /step1
+    requirements:
+      - numpy
+      - scikit-learn
+      - joblib
+    ignore_patterns:
+      - '*.pyc'
+      - __pycache__
+      - venv
+      - build
+      - primeway
+      - '*.egg-info'
+    dependencies: [step1]
+
+  - id: step3
+    job_type: deploy
+    inputs: [step1, step2]
+    docker_image: python:3.10-slim
+    job_name: deploy_model
+    project_dir: ./deploy
+    entry_script: deploy.py
+    memory: 25
+    disk_space: 25
+    port: 8000
+    cpu_count: 4
+    gpu_types:
+    - type: NVIDIA A40
+      count: 1
+    health_endpoint: /health
+    schedule:
+    workdays:  # Mon-Fri default schedule
+      - start: "08:00:00"
+        end: "18:00:00"
+      - start: "22:00:00"  # Night window
+        end: "23:59:59"
+    
+    weekends:  # Sat-Sun default schedule
+      - start: "10:00:00"
+        end: "16:00:00"
+      - start: "20:00:00"  # Evening window
+        end: "22:00:00"
+    
+    specific_days:  # Optional overrides for specific days
+      - day: monday
+        windows:
+          - start: "07:00:00"  # Morning window
+            end: "19:00:00"
+          - start: "21:00:00"  # Evening window
+            end: "23:00:00"    
+      - day: wednesday
+        windows:
+          - start: "09:00:00"  # Morning session
+            end: "12:00:00"
+          - start: "14:00:00"  # Afternoon session
+            end: "17:00:00"
+          - start: "20:00:00"  # Night training
+            end: "23:00:00"
+    idle_timeout: 960
+    env:
+    - name: ARTIFACT_DIR_FROM_STEP_1
+      value: /step1
+    - name: ARTIFACT_DIR_FROM_STEP_2
+      value: /step2
+    requirements:
+      - numpy
+      - fastapi
+      - joblib
+      - scikit-learn
+    ignore_patterns:
+      - '*.pyc'
+      - __pycache__
+      - venv
+      - build
+      - primeway
+      - '*.egg-info'
+    dependencies: [step2]  # Depends on step2
+
+
+# pipeline_id - 696a0eff-fd6c-400c-ac6c-a61a7b082e2d

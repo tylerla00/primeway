@@ -1,0 +1,18 @@
+docker_image: python:3.8-slim
+job_name: test_primeway
+gpu_count: 1
+cpu_count: 1
+memory: 4
+disk_space: 10
+gpu_type: NVIDIA A40
+persistent_volume: /data
+requirements:
+  - 'numpy'
+ignore_patterns:
+  - '*.pyc'
+  - '__pycache__'
+  - 'venv'
+  - 'build'
+  - 'primeway'
+  - '*.egg-info'
+api_token: primeway-nlOm2e3vwv_rjakw286mzg

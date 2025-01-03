@@ -1,0 +1,34 @@
+primeway_api_token: primeway-o34bufMY2E6xbQpXvXIRoA
+docker_image: python:3.10-slim
+job_name: deploy_sklearn_model
+job_type: deploy
+entry_script: deploy.py
+memory: 25
+disk_space: 25
+port: 8000
+cpu_count: 4
+# idle_timeout: 960
+gpu_types:
+- type: NVIDIA A40
+  count: 1
+health_endpoint: /health
+schedule:
+  workdays:
+
+    - start: "22:00:00"
+      end: "23:00:00"
+    - start: "02:00:00"
+      end: "03:00:00"
+health_check_timeout: 960
+requirements:
+  - numpy
+  - fastapi
+  - joblib
+  - scikit-learn
+ignore_patterns:
+  - '*.pyc'
+  - __pycache__
+  - venv
+  - build
+  - primeway
+  - '*.egg-info'

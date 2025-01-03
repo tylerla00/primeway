@@ -1,0 +1,13 @@
+primeway_api_token: primeway-test789token
+docker_image: custom/ml-serving:v1
+job_name: model_serving_basic
+job_type: deploy
+memory: 16
+disk_space: 25
+port: 8080
+cpu_count: 2
+health_endpoint: /health
+idle_timeout: 1800
+gpu_types:
+  - type: NVIDIA T4
+    count: 1

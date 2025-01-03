@@ -1,0 +1,22 @@
+primeway_api_token: primeway-test123token
+docker_image: python:3.10-slim
+job_name: train_basic_model
+job_type: run
+entry_script: train.py
+project_dir: ./model_training
+memory: 32
+disk_space: 50
+cpu_count: 4
+gpu_types:
+  - type: NVIDIA A100 80GB PCIe
+    count: 1
+requirements:
+  - pytorch
+  - pandas
+  - scikit-learn
+  - matplotlib
+ignore_patterns:
+  - '*.pyc'
+  - __pycache__
+  - .git
+  - .env

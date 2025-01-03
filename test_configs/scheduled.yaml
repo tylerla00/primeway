@@ -1,0 +1,24 @@
+primeway_api_token: primeway-test456token
+docker_image: python:3.9-slim
+job_name: scheduled_training
+job_type: run
+entry_script: batch_train.py
+memory: 64
+disk_space: 100
+cpu_count: 8
+gpu_types:
+  - type: NVIDIA A40
+    count: 2
+schedule:
+  workdays:
+    - start: "01:00:00"
+    - start: "13:00:00"
+  specific_days:
+    - day: saturday
+      windows:
+        - start: "00:00:00"
+requirements:
+  - tensorflow
+  - keras
+  - numpy
+  - pandas

@@ -1,0 +1,24 @@
+primeway_api_token: primeway-nlOm2e3vwv_rjakw286mzg
+docker_image: python:3.10-slim
+job_name: train_sklearn_model
+job_type: run
+entry_script: train.py
+request_input_dir: /custom-data
+memory: 25
+disk_space: 25
+cpu_count: 4
+gpu_types:
+- type: NVIDIA A40
+  count: 1
+requirements:
+  - numpy
+  - joblib
+  - scikit-learn
+  - pandas
+ignore_patterns:
+  - '*.pyc'
+  - __pycache__
+  - venv
+  - build
+  - primeway
+  - '*.egg-info'

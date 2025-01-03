@@ -1,0 +1,13 @@
+primeway_api_token: primeway-nlOm2e3vwv_rjakw286mzg
+docker_image: nickla00/qwen-inference-service:v1
+job_name: qwen_inference
+job_type: deploy
+memory: 40
+disk_space: 40
+port: 8080
+cpu_count: 4
+gpu_types:
+- type: NVIDIA A40
+  count: 1
+health_endpoint: /
+idle_timeout: 3600

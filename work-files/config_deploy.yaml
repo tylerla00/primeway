@@ -1,0 +1,19 @@
+docker_image: vllm/vllm-openai:latest
+job_name: gemma-inference-2-2b
+gpu_count: 1
+cpu_count: 1
+memory: 25
+disk_space: 25
+port: 8000
+gpu_type: NVIDIA A40
+persistent_volume: /data
+app_api_token: "token-abc123"
+env:
+  - name: MODEL_ID
+    value: google/gemma-2-2b-it
+  - name: HUGGING_FACE_HUB_TOKEN
+    value: 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
+docker_command: vllm serve
+args: --model $MODEL_ID --api-key token-abc123 --tensor-parallel-size=1
+primeway_api_token: primeway-nlOm2e3vwv_rjakw286mzg
+health_endpoint: /health
